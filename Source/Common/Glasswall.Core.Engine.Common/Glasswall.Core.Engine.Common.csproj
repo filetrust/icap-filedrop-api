@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyName>Glasswall.Core.Engine.Common</AssemblyName>
+    <RootNamespace>Glasswall.Core.Engine.Common</RootNamespace>
+    <ProjectGuid>{ADCBD611-6C9D-44BD-BC08-FC0C63E94166}</ProjectGuid>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Glasswall.Core.Engine.Messaging\Glasswall.Core.Engine.Messaging.csproj" />
+  </ItemGroup>
+
+</Project>
