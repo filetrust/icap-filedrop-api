@@ -1,0 +1,119 @@
+{
+    "resource": "/",
+    "path": "/",
+    "httpMethod": "POST",
+    "headers": {
+        "Accept": "*/*",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Cache-Control": "no-cache",
+        "CloudFront-Forwarded-Proto": "https",
+        "CloudFront-Is-Desktop-Viewer": "true",
+        "CloudFront-Is-Mobile-Viewer": "false",
+        "CloudFront-Is-SmartTV-Viewer": "false",
+        "CloudFront-Is-Tablet-Viewer": "false",
+        "CloudFront-Viewer-Country": "GB",
+        "Content-Type": "multipart/form-data; boundary=--------------------------456246963596926506865713",
+        "Host": "n61x9shy73.execute-api.us-west-2.amazonaws.com",
+        "Postman-Token": "0d5df0c0-664f-4e2f-8a87-b08b082d7095",
+        "User-Agent": "PostmanRuntime/7.24.1",
+        "Via": "1.1 885568517e0d023e5f9421e61b76b1cf.cloudfront.net (CloudFront)",
+        "X-Amz-Cf-Id": "N7lpdifXNVSke14mOaP1HWtbOjydG8y-gHesHWMijk0xmESSfSuhCA==",
+        "X-Amzn-Trace-Id": "Root=1-5eafe613-dbe2d2bbf9deea6fa931154f",
+        "X-Forwarded-For": "89.197.108.205, 70.132.45.137",
+        "X-Forwarded-Port": "443",
+        "X-Forwarded-Proto": "https"
+    },
+    "multiValueHeaders": {
+        "Accept": [
+            "*/*"
+        ],
+        "Accept-Encoding": [
+            "gzip, deflate, br"
+        ],
+        "Cache-Control": [
+            "no-cache"
+        ],
+        "CloudFront-Forwarded-Proto": [
+            "https"
+        ],
+        "CloudFront-Is-Desktop-Viewer": [
+            "true"
+        ],
+        "CloudFront-Is-Mobile-Viewer": [
+            "false"
+        ],
+        "CloudFront-Is-SmartTV-Viewer": [
+            "false"
+        ],
+        "CloudFront-Is-Tablet-Viewer": [
+            "false"
+        ],
+        "CloudFront-Viewer-Country": [
+            "GB"
+        ],
+        "Content-Type": [
+            "multipart/form-data; boundary=--------------------------456246963596926506865713"
+        ],
+        "Host": [
+            "n61x9shy73.execute-api.us-west-2.amazonaws.com"
+        ],
+        "Postman-Token": [
+            "0d5df0c0-664f-4e2f-8a87-b08b082d7095"
+        ],
+        "User-Agent": [
+            "PostmanRuntime/7.24.1"
+        ],
+        "Via": [
+            "1.1 885568517e0d023e5f9421e61b76b1cf.cloudfront.net (CloudFront)"
+        ],
+        "X-Amz-Cf-Id": [
+            "N7lpdifXNVSke14mOaP1HWtbOjydG8y-gHesHWMijk0xmESSfSuhCA=="
+        ],
+        "X-Amzn-Trace-Id": [
+            "Root=1-5eafe613-dbe2d2bbf9deea6fa931154f"
+        ],
+        "X-Forwarded-For": [
+            "89.197.108.205, 70.132.45.137"
+        ],
+        "X-Forwarded-Port": [
+            "443"
+        ],
+        "X-Forwarded-Proto": [
+            "https"
+        ]
+    },
+    "queryStringParameters": null,
+    "multiValueQueryStringParameters": null,
+    "pathParameters": null,
+    "stageVariables": null,
+    "requestContext": {
+        "resourceId": "rqvpdff7tc",
+        "resourcePath": "/",
+        "httpMethod": "POST",
+        "extendedRequestId": "MADjJHNCPHcF2ZQ=",
+        "requestTime": "04/May/2020:09:53:24 +0000",
+        "path": "/Prod/",
+        "accountId": "370377960141",
+        "protocol": "HTTP/1.1",
+        "stage": "Prod",
+        "domainPrefix": "n61x9shy73",
+        "requestTimeEpoch": 1588586004023,
+        "requestId": "cdebad8a-2b67-48b7-aa10-f21a169d59a9",
+        "identity": {
+            "cognitoIdentityPoolId": null,
+            "accountId": null,
+            "cognitoIdentityId": null,
+            "caller": null,
+            "sourceIp": "89.197.108.205",
+            "principalOrgId": null,
+            "accessKey": null,
+            "cognitoAuthenticationType": null,
+            "cognitoAuthenticationProvider": null,
+            "userArn": null,
+            "userAgent": "PostmanRuntime/7.24.1",
+            "user": null
+        },
+        "domainName": "n61x9shy73.execute-api.us-west-2.amazonaws.com",
+        "apiId": "n61x9shy73"
+    },
+    "body":"----------------------------456246963596926506865713\r\nContent-Disposition: form-data; name=\"file\"; filename=\"146257.pdf\"\r\nContent-Type: application/pdf\r\n\r\n%PDF-1.7\r\n%����\r\n1 0 obj\r\n<</Type/Catalog/Pages 2 0 R/Lang(en-GB) /StructTreeRoot 37 0 R/MarkInfo<</Marked true>>/Metadata 220 0 R/ViewerPreferences 221 0 R>>\r\nendobj\r\n2 0 obj\r\n<</Type/Pages/Count 3/Kids[ 3 0 R 29 0 R 34 0 R] >>\r\nendobj\r\n3 0 obj\r\n<</Type/Page/Parent 2 0 R/Resources<</Font<</F1 5 0 R/F2 9 0 R/F3 14 0 R/F4 16 0 R/F5 18 0 R>>/ExtGState<</GS7 7 0 R/GS8 8 0 R>>/XObject<</Meta24 24 0 R>>/ProcSet[/PDF/Text/ImageB/ImageC/ImageI] >>/Annots[ 20 0 R 21 0 R 22 0 R 23 0 R] /MediaBox[ 0 0 595.2 841.92] /Contents 4 0 R/Group<</Type/Group/S/Transparency/CS/DeviceRGB>>/Tabs/S/StructParents 0>>\r\nendobj\r\n4 0 obj\r\n<</Filter/FlateDecode/Length 4946>>\r\nstream\r\nx��ks��g��#�\tχ���pƖ�4��McO=��h�d��)�������\u000b�<@dL@�V3�x �],��.X<��x���˓^�rY<qR���QUV��um��PF��В�����7_�Ǐ��~���w�`uY�����G\f:W+�.E��Fɲ�w>B��_5��-|r񞞴{���g��\u000b>{37�W��D1�W��Ϗ}\u000b �����È0b��L\r1\"D,���h��\b�!0�D Ύ�`�(�(��8_(
