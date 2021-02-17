@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
 namespace Glasswall.CloudSdk.AWS.Rebuild
 {
@@ -15,9 +16,17 @@ namespace Glasswall.CloudSdk.AWS.Rebuild
             BuildWebHost(args).Run();
         }
 
-        public static IWebHost BuildWebHost(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
+        public static IHost BuildWebHost(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.ConfigureKestrel(options =>
+                    {
+                        options.Limits.MaxRequestBodySize = 1000 * 1000 * 1000; //1GB
+                        options.AddServerHeader = false;
+                    });
+                    webBuilder.UseStartup<Startup>();
+                })
                 .Build();
     }
 }
