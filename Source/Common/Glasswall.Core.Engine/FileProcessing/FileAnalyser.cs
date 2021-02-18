@@ -27,24 +27,26 @@ namespace Glasswall.Core.Engine.FileProcessing
         {
             var analysisReport = string.Empty;
             
-                var glasswallConfiguration = _glasswallConfigurationAdaptor.Adapt(flags);
+            var glasswallConfiguration = _glasswallConfigurationAdaptor.Adapt(flags);
 
-                if (glasswallConfiguration == null)
-                {
-                    return analysisReport;
-                }
+            if (glasswallConfiguration == null)
+            {
+                return analysisReport;
+            }
 
-                var setConfigurationEngineOutcome = _glasswallFileOperations.SetConfiguration(glasswallConfiguration);
+            var setConfigurationEngineOutcome = _glasswallFileOperations.SetConfiguration(glasswallConfiguration);
 
-                if (setConfigurationEngineOutcome != EngineOutcome.Success)
-                {
-                    return analysisReport;
-                }
+            if (setConfigurationEngineOutcome != EngineOutcome.Success)
+            {
+                return analysisReport;
+            }
 
-                _glasswallFileOperations.AnalyseFile(fileBytes, fileType, out analysisReport);
-                             
+            var analysisOutcome = _glasswallFileOperations.AnalyseFile(fileBytes, fileType, out analysisReport);
 
-            return analysisReport;       
+            if (analysisOutcome == EngineOutcome.Error || analysisOutcome == EngineOutcome.Success)
+                return analysisReport;       
+
+            throw new InvalidOperationException("Unexpected failure from AnalyseFile: " + analysisOutcome);
         }
     }
 }
