@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Glasswall.CloudSdk.Common;
 using Glasswall.CloudSdk.Common.Web.Abstraction;
@@ -30,7 +31,7 @@ namespace Glasswall.CloudSdk.AWS.Analyse.Controllers
         }
 
         [HttpPost("base64")]
-        public async Task<IActionResult> AnalyseFromBase64([FromBody]Base64Request request)
+        public async Task<IActionResult> AnalyseFromBase64([FromBody]Base64Request request, CancellationToken cancellationToken)
         {
             try
             {
@@ -42,14 +43,14 @@ namespace Glasswall.CloudSdk.AWS.Analyse.Controllers
                 if (!TryGetBase64File(request.Base64, out var file))
                     return BadRequest("Input file could not be decoded from base64.");
 
-                await Task.Run(() => RecordEngineVersion());
+                await Task.Run(RecordEngineVersion, cancellationToken);
 
-                var fileType = await Task.Run(() => DetectFromBytes(file));
+                var fileType = await DetectFromBytes(file, cancellationToken);
 
                 if (fileType.FileType == FileType.Unknown)
                     return UnprocessableEntity("File could not be determined to be a supported file");
 
-                var xmlReport = await Task.Run(() => AnalyseFromBytes(request.ContentManagementFlags, fileType.FileTypeName, file));
+                var xmlReport = await AnalyseFromBytes(request.ContentManagementFlags, fileType.FileTypeName, file, cancellationToken);
 
                 if (string.IsNullOrWhiteSpace(xmlReport))
                     return UnprocessableEntity("No report could be generated for file.");
@@ -64,7 +65,7 @@ namespace Glasswall.CloudSdk.AWS.Analyse.Controllers
         }
 
         [HttpPost("url")]
-        public async Task<IActionResult> AnalyseFromUrl([FromBody] UrlRequest request)
+        public async Task<IActionResult> AnalyseFromUrl([FromBody] UrlRequest request, CancellationToken cancellationToken)
         {
             try
             {
@@ -76,14 +77,14 @@ namespace Glasswall.CloudSdk.AWS.Analyse.Controllers
                 if (!TryGetFile(request.InputGetUrl, out var file))
                     return BadRequest("Input file could not be downloaded.");
 
-                await Task.Run(() => RecordEngineVersion());
+                await Task.Run(RecordEngineVersion, cancellationToken);
 
-                var fileType = await Task.Run(() => DetectFromBytes(file));
+                var fileType = await DetectFromBytes(file, cancellationToken);
 
                 if (fileType.FileType == FileType.Unknown)
                     return UnprocessableEntity("File could not be determined to be a supported file");
 
-                var xmlReport = await Task.Run(() => AnalyseFromBytes(request.ContentManagementFlags, fileType.FileTypeName, file));
+                var xmlReport = await AnalyseFromBytes(request.ContentManagementFlags, fileType.FileTypeName, file, cancellationToken);
 
                 if (string.IsNullOrWhiteSpace(xmlReport))
                     return UnprocessableEntity("No report could be generated for file.");
@@ -97,12 +98,12 @@ namespace Glasswall.CloudSdk.AWS.Analyse.Controllers
             }
         }
 
-        private string AnalyseFromBytes(ContentManagementFlags contentManagementFlags, string fileType, byte[] bytes)
+        private async Task<string> AnalyseFromBytes(ContentManagementFlags contentManagementFlags, string fileType, byte[] bytes, CancellationToken cancellationToken)
         {
             contentManagementFlags = contentManagementFlags.ValidatedOrDefault();
 
             TimeMetricTracker.Restart();
-            var response = _fileAnalyser.GetReport(contentManagementFlags, fileType, bytes);
+            var response = await _fileAnalyser.GetReportAsync(contentManagementFlags, fileType, bytes, cancellationToken);
             TimeMetricTracker.Stop();
 
             MetricService.Record(Metric.AnalyseTime, TimeMetricTracker.Elapsed);
@@ -115,10 +116,10 @@ namespace Glasswall.CloudSdk.AWS.Analyse.Controllers
             MetricService.Record(Metric.Version, version);
         }
 
-        private FileTypeDetectionResponse DetectFromBytes(byte[] bytes)
+        private async Task<FileTypeDetectionResponse> DetectFromBytes(byte[] bytes, CancellationToken cancellationToken)
         {
             TimeMetricTracker.Restart();
-            var fileTypeResponse = _fileTypeDetector.DetermineFileType(bytes);
+            var fileTypeResponse = await _fileTypeDetector.DetermineFileTypeAsync(bytes, cancellationToken);
             TimeMetricTracker.Stop();
 
             MetricService.Record(Metric.DetectFileTypeTime, TimeMetricTracker.Elapsed);

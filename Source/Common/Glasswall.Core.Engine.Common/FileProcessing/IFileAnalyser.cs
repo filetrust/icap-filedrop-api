@@ -1,12 +1,11 @@
-﻿using Glasswall.Core.Engine.Common.PolicyConfig;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using Glasswall.Core.Engine.Common.PolicyConfig;
 
 namespace Glasswall.Core.Engine.Common.FileProcessing
 {
     public interface IFileAnalyser
     {
-        string GetReport(
-            ContentManagementFlags flags,
-            string fileType, 
-            byte[] fileBytes);
+        Task<string> GetReportAsync(ContentManagementFlags flags, string fileType, byte[] fileContent, CancellationToken cancellationToken);
     }
 }

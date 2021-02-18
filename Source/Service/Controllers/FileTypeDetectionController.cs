@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Glasswall.CloudSdk.Common;
 using Glasswall.CloudSdk.Common.Web.Abstraction;
@@ -26,7 +27,7 @@ namespace Glasswall.CloudSdk.AWS.FileTypeDetection.Controllers
         }
 
         [HttpPost("base64")]
-        public async Task<IActionResult> DetermineFileTypeFromBase64([FromBody]Base64Request request)
+        public async Task<IActionResult> DetermineFileTypeFromBase64([FromBody]Base64Request request, CancellationToken cancellationToken)
         {
             try
             {
@@ -38,9 +39,9 @@ namespace Glasswall.CloudSdk.AWS.FileTypeDetection.Controllers
                 if (!TryGetBase64File(request.Base64, out var file))
                     return BadRequest("Input file could not be decoded from base64.");
 
-                await Task.Run(() => RecordEngineVersion());
+                await Task.Run(RecordEngineVersion, cancellationToken);
 
-                var fileType = await Task.Run(() => DetectFromBytes(file));
+                var fileType = await DetectFromBytes(file, cancellationToken);
 
                 return Ok(fileType);
             }
@@ -52,7 +53,7 @@ namespace Glasswall.CloudSdk.AWS.FileTypeDetection.Controllers
         }
 
         [HttpPost("url")]
-        public async Task<IActionResult> DetermineFileTypeFromUrl([FromBody] UrlRequest request)
+        public async Task<IActionResult> DetermineFileTypeFromUrl([FromBody] UrlRequest request, CancellationToken cancellationToken)
         {
             try
             {
@@ -64,9 +65,9 @@ namespace Glasswall.CloudSdk.AWS.FileTypeDetection.Controllers
                 if (!TryGetFile(request.InputGetUrl, out var file))
                     return BadRequest("Input file could not be downloaded.");
 
-                await Task.Run(() => RecordEngineVersion());
+                await Task.Run(RecordEngineVersion);
 
-                var fileType = await Task.Run(() => DetectFromBytes(file));
+                var fileType = await DetectFromBytes(file, cancellationToken);
 
                 return Ok(fileType);
             }
@@ -83,10 +84,10 @@ namespace Glasswall.CloudSdk.AWS.FileTypeDetection.Controllers
             MetricService.Record(Metric.Version, version);
         }
 
-        private FileTypeDetectionResponse DetectFromBytes(byte[] bytes)
+        private async Task<FileTypeDetectionResponse> DetectFromBytes(byte[] bytes, CancellationToken cancellationToken)
         {
             TimeMetricTracker.Restart();
-            var fileTypeResponse = _fileTypeDetector.DetermineFileType(bytes);
+            var fileTypeResponse = await _fileTypeDetector.DetermineFileTypeAsync(bytes, cancellationToken);
             TimeMetricTracker.Stop();
 
             MetricService.Record(Metric.DetectFileTypeTime, TimeMetricTracker.Elapsed);
