@@ -31,6 +31,8 @@ namespace Glasswall.CloudSdk.AWS.Rebuild
             services.AddSingleton<IFileAnalyser, FileAnalyser>();
             services.AddSingleton<IAdaptor<ContentManagementFlags, string>, GlasswallConfigurationAdaptor>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSingleton<IGlasswallEngineSemaphore, GlasswallEngineSemaphore>();
+            services.AddSingleton<IGlasswallEngineSemaphoreExceptionOptions, GlasswallEngineSemaphoreExceptionOptions>();
 
             var p = (int)Environment.OSVersion.Platform;
 

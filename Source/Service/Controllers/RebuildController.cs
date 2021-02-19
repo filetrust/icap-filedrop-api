@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Amazon;
 using Amazon.S3;
@@ -532,7 +533,7 @@ namespace Glasswall.CloudSdk.AWS.Rebuild.Controllers
         private FileTypeDetectionResponse DetectFromBytes(byte[] bytes)
         {
             TimeMetricTracker.Restart();
-            var fileTypeResponse = _fileTypeDetector.DetermineFileType(bytes);
+            var fileTypeResponse = _fileTypeDetector.DetermineFileTypeAsync(bytes, CancellationToken.None).GetAwaiter().GetResult();
             TimeMetricTracker.Stop();
             
             MetricService.Record(Metric.DetectFileTypeTime, TimeMetricTracker.Elapsed);

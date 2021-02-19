@@ -25,7 +25,15 @@ namespace Glasswall.CloudSdk.Common
                 return;
 
             _logger.LogTrace($"Setting header '{metricName}' to value '{value}'");
-            responseHeaders.Add(metricName, value?.ToString() ?? "");
+
+            try
+            {
+                responseHeaders.Add(metricName, value?.ToString() ?? "");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Could not add header {metricName}");
+            }
         }
     }
 }

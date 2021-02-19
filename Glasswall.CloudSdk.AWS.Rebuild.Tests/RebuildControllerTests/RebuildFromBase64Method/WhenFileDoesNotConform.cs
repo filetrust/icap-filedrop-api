@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using Glasswall.CloudSdk.Common;
 using Glasswall.CloudSdk.Common.Web.Models;
 using Glasswall.Core.Engine.Common;
@@ -30,8 +31,8 @@ namespace Glasswall.CloudSdk.AWS.Rebuild.Tests.RebuildControllerTests.RebuildFro
             GlasswallVersionServiceMock.Setup(s => s.GetVersion())
                 .Returns(Version);
 
-            FileTypeDetectorMock.Setup(s => s.DetermineFileType(It.IsAny<byte[]>()))
-                .Returns(_expectedType = new FileTypeDetectionResponse(FileType.Bmp));
+            FileTypeDetectorMock.Setup(s => s.DetermineFileTypeAsync(It.IsAny<byte[]>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(_expectedType = new FileTypeDetectionResponse(FileType.Bmp));
 
             FileProtectorMock.Setup(s => s.GetProtectedFile(
                     It.IsAny<ContentManagementFlags>(),
@@ -105,7 +106,8 @@ namespace Glasswall.CloudSdk.AWS.Rebuild.Tests.RebuildControllerTests.RebuildFro
         [Test]
         public void FileTypeDetection_Is_Retrieved()
         {
-            FileTypeDetectorMock.Verify(s => s.DetermineFileType(It.Is<byte[]>(x => x.SequenceEqual(ExpectedDecoded))), Times.Once);
+            FileTypeDetectorMock.Verify(s => s.DetermineFileTypeAsync(It.Is<byte[]>(x => x.SequenceEqual(ExpectedDecoded)),
+                It.IsAny<CancellationToken>()), Times.Once);
             FileTypeDetectorMock.VerifyNoOtherCalls();
         }
 
