@@ -1,10 +1,13 @@
 using System;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Glasswall.CloudSdk.AWS.Rebuild.LivenessCheckers;
 using Glasswall.CloudSdk.Common;
 using Glasswall.CloudSdk.Common.Web.Abstraction;
 using Glasswall.CloudSdk.Common.Web.Models;
 using Glasswall.Core.Engine.Common.FileProcessing;
+using Glasswall.Core.Engine.Common.GlasswallEngineLibrary;
 using Glasswall.Core.Engine.Messaging;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -15,15 +18,18 @@ namespace Glasswall.CloudSdk.AWS.FileTypeDetection.Controllers
     {
         private readonly IGlasswallVersionService _glasswallVersionService;
         private readonly IFileTypeDetector _fileTypeDetector;
+        private readonly IEngineHealthWatcher _engineHealthWatcher;
 
         public FileTypeDetectionController(
             IGlasswallVersionService glasswallVersionService,
             IFileTypeDetector fileTypeDetector,
             IMetricService metricService,
-            ILogger<FileTypeDetectionController> logger) : base(logger, metricService)
+            ILogger<FileTypeDetectionController> logger,
+            IEngineHealthWatcher engineHealthWatcher) : base(logger, metricService)
         {
             _glasswallVersionService = glasswallVersionService ?? throw new ArgumentNullException(nameof(glasswallVersionService));
             _fileTypeDetector = fileTypeDetector ?? throw new ArgumentNullException(nameof(fileTypeDetector));
+            _engineHealthWatcher = engineHealthWatcher ?? throw new ArgumentNullException(nameof(engineHealthWatcher));
         }
 
         [HttpPost("base64")]
@@ -45,10 +51,29 @@ namespace Glasswall.CloudSdk.AWS.FileTypeDetection.Controllers
 
                 return Ok(fileType);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Logger.LogError(e, $"Exception occured processing file: {e.Message}");
-                throw;
+                Logger.Log(LogLevel.Warning, 0,
+                    "File analysis request threw an exception.",
+                    ex);
+
+                if (!(ex is GlasswallEngineRequestException gex))
+                {
+                    throw;
+                }
+
+                switch (gex.RequestState)
+                {
+                    case GlasswallEngineRequestState.CoreEngineCallTimedOut:
+                        _engineHealthWatcher.EngineTimeout = true;
+                        return StatusCode((int)HttpStatusCode.RequestTimeout);
+
+                    case GlasswallEngineRequestState.SemaphoreWaitTimeout:
+                        return StatusCode((int)HttpStatusCode.ServiceUnavailable);
+
+                    default:
+                        throw;
+                }
             }
         }
 
