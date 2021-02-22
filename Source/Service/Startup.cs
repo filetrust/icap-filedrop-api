@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using Glasswall.CloudSdk.AWS.Common.Web;
+using Glasswall.CloudSdk.AWS.Rebuild.LivenessCheckers;
 using Glasswall.CloudSdk.Common;
 using Glasswall.Core.Engine;
 using Glasswall.Core.Engine.Common;
@@ -9,6 +10,7 @@ using Glasswall.Core.Engine.Common.GlasswallEngineLibrary;
 using Glasswall.Core.Engine.Common.PolicyConfig;
 using Glasswall.Core.Engine.FileProcessing;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -34,6 +36,10 @@ namespace Glasswall.CloudSdk.AWS.Rebuild
             services.AddSingleton<IGlasswallEngineSemaphore, GlasswallEngineSemaphore>();
             services.AddSingleton<IGlasswallEngineSemaphoreExceptionOptions, GlasswallEngineSemaphoreExceptionOptions>();
 
+            services.AddSingleton<IEngineHealthWatcher, EngineHealthWatcher>();
+            services.AddSingleton<EngineLivenessChecker>();
+            services.AddHealthChecks().AddCheck<EngineLivenessChecker>("engine_timeout_check", null, new[] { "liveness" });
+
             var p = (int)Environment.OSVersion.Platform;
 
             if ((p == 4) || (p == 6) || (p == 128))
@@ -48,7 +54,15 @@ namespace Glasswall.CloudSdk.AWS.Rebuild
 
         protected override void ConfigureAdditional(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            
+            app.UseHealthChecks("/health/live", new HealthCheckOptions
+            {
+                Predicate = (check) => check.Tags.Contains("liveness")
+            });
+
+            app.UseHealthChecks("/health/ready", new HealthCheckOptions
+            {
+                Predicate = (check) => true
+            });
         }
     }
 }
