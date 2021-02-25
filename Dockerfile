@@ -19,6 +19,7 @@ COPY ["Source/Common/Glasswall.CloudSdk.Common/Glasswall.CloudSdk.Common.csproj"
 COPY ["Source/Common/Glasswall.Core.Engine.Common/Glasswall.Core.Engine.Common.csproj", "Source/Common/Glasswall.Core.Engine.Common/"]
 COPY ["Source/Common/Glasswall.Core.Engine.Messaging/Glasswall.Core.Engine.Messaging.csproj", "Source/Common/Glasswall.Core.Engine.Messaging/"]
 COPY ["Source/Common/Glasswall.Core.Engine/Glasswall.Core.Engine.csproj", "Source/Common/Glasswall.Core.Engine/"]
+COPY lib/libs/rebuild/linux/libglasswall.classic.so lib/libs/rebuild/linux/
 RUN dotnet restore "Source/Service/Glasswall.CloudSdk.AWS.Rebuild.csproj"
 COPY . .
 RUN git submodule update --init --recursive || true

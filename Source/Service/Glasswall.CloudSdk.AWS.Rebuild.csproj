@@ -18,10 +18,10 @@
     <PackageReference Include="SharpZipLib" Version="1.3.1" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\libs\libs\rebuild\linux\libglasswall.classic.so" Link="lib/linux/libglasswall.classic.so">
+    <None Include="..\..\lib\libs\rebuild\linux\libglasswall.classic.so" Link="lib/linux/libglasswall.classic.so">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\libs\libs\rebuild\windows\glasswall.classic.dll" Link="lib/windows/glasswall.classic.dll">
+    <None Include="..\..\lib\libs\rebuild\windows\glasswall.classic.dll" Link="lib/windows/glasswall.classic.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="libfreetype.so.6" Link="libfreetype.so.6">
