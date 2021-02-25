@@ -24,8 +24,11 @@ jobs:
     name: Build and Push Docker Image
     runs-on: ubuntu-latest
     steps:
-    - name: Check out code
-      uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v2 
+      with:
+        submodules: true
+        token: ${{ secrets.TOKEN_GITHUB }}
     - name: Docker Login
       uses: docker/login-action@v1.6.0
       with:
