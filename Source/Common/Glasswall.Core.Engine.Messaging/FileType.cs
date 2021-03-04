@@ -24,14 +24,14 @@
         Bmp = 29,
         Tiff = 30,
         Zip = 256,
-        // Pe = 31,
-        // Macho = 32,
-        //Elf = 33,
-        //Mp4 = 34,
-        //Mp3 = 35,
-        //Mp2 = 36,
-        //Wav = 37,
-        //Mpg = 38,
-        // Coff = 39
+        Pe = 31,
+        Macho = 32,
+        Elf = 33,
+        Mp4 = 34,
+        Mp3 = 35,
+        Mp2 = 36,
+        Wav = 37,
+        Mpg = 38,
+        Coff = 39
     }
 }
